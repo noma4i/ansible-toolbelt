@@ -1,0 +1,11 @@
+- apt_repository: repo=ppa:nginx/stable
+- apt: pkg=nginx
+
+- file: path=/var/tmp/nginx state=directory owner=nginx
+- service: name=nginx enabled=yes state=started
+- name: upload nginx config
+  synchronize: >
+    src=nginx dest=/etc
+    times=no checksum=yes
+    set_remote_user=yes rsync_path="sudo rsync"
+  notify: restart nginx

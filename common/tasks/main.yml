@@ -1,0 +1,56 @@
+---
+- name: add {{ user }} to www-data
+  user: name={{ user }} append=yes groups=www-data
+
+- name: apt-get update
+  apt: update_cache=yes cache_valid_time=86400
+- name: install common packages
+  apt: name={{ item }}
+  with_items:
+    - fail2ban
+    - git-core
+    - vim
+    - screen
+    - moreutils
+    - autoconf
+    - make
+    - cmake
+    - gcc
+    - curl
+    - libxml2-dev
+    - libxslt-dev
+    - libcurl4-openssl-dev
+    - g++
+    - mosh
+    - libmariadbclient-dev
+
+- service: name=fail2ban enabled=yes state=started
+
+- name: create folders for mina
+  file: path=/home/{{ user }}/{{ item }} state=directory owner={{ user }}
+  with_items:
+    - .ssh
+    - shared
+    - bundle
+    - config
+    - releases
+    - log
+    - tmp
+    - tmp/cache
+    - tmp/pids
+    - tmp/sessions
+    - tmp/sockets
+
+- name: add known ssh hosts
+  shell: ssh-keyscan -H github.com > /home/{{ user }}/.ssh/known_hosts
+
+- name: ensure that authorized_keys exists
+  command: touch /home/{{ user }}/.ssh/authorized_keys
+  args:
+    creates: /home/{{ user }}/.ssh/authorized_keys
+
+- name: fix ownership for known hosts
+  file: path=/home/{{ user }}/.ssh/known_hosts mode=0600 owner={{ user }}
+
+- name: copy from root
+  shell: cat /root/.ssh/authorized_keys >>  /home/{{ user }}/.ssh/authorized_keys

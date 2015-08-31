@@ -1,0 +1,37 @@
+---
+- hosts: rails-front
+  vars:
+    user: deploy
+    app_name: rails
+    app_path: /home/deploy
+    rbenv:
+      env: user
+      version: v0.4.0
+      ruby_version: 2.2.1
+    environment_config:
+      SECRET_KEY_BASE: secret_key
+      DBUSER: database_user
+      DBPASS: database_password
+      iptables_allowed_tcp_ports: [22, 25, 80, 443, 3306, 6379]
+      iptables_allowed_udp_ports: [22, 25, 80, 443, 3306, 6379]
+  remote_user: root
+  roles:
+    - Stouts.iptables
+    - common
+    - monit
+    - rails_unicorn
+    - nginx
+    - franklinkim.environment
+    - role: zzet.rbenv
+      rbenv_users:
+        - deploy
+
+- hosts: rails-redis
+  vars:
+    redis_bind: 127.0.0.1
+    redis_password: redis_password
+    iptables_allowed_tcp_ports: [22, 25, 6379]
+    iptables_allowed_udp_ports: [22, 25, 6379]
+  roles:
+    - DavidWittman.redis
+    - Stouts.iptables
