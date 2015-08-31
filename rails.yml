@@ -2,16 +2,18 @@
 - hosts: rails-front
   vars:
     user: deploy
+    github_user: noma4i
     app_name: rails
     app_path: /home/deploy
+    app_port: 8080
     rbenv:
       env: user
       version: v0.4.0
       ruby_version: 2.2.1
     environment_config:
-      SECRET_KEY_BASE: secret_key
-      DBUSER: database_user
-      DBPASS: database_password
+      SECRET_KEY_BASE: SECRET_KEY_BASE
+      DBUSER: DBUSER
+      DBPASS: DBPASS
       iptables_allowed_tcp_ports: [22, 25, 80, 443, 3306, 6379]
       iptables_allowed_udp_ports: [22, 25, 80, 443, 3306, 6379]
   remote_user: root

@@ -1,8 +1,3 @@
-- file: path={{ app_path }} owner={{ user }} group={{ group }} state=directory
-- file: path={{ app_path }}/shared owner={{ user }} group={{ group }} state=directory
-- file: path={{ app_path }}/log owner={{ user }} group={{ group }} mode=0775 state=directory
-- file: dest={{ app_path }}/shared/log src={{ app_path }}/log state=link
-
 # rendering monit template
 - template: src={{ monit_config }} dest=/etc/monit/conf.d/{{ app_name }}.conf
   notify: reload monit

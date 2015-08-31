@@ -23,13 +23,13 @@
     - g++
     - mosh
     - libmariadbclient-dev
+    - htop
 
 - service: name=fail2ban enabled=yes state=started
 
 - name: create folders for mina
-  file: path=/home/{{ user }}/{{ item }} state=directory owner={{ user }}
+  file: path=/home/{{ user }}/{{ item }} state=directory owner={{ user }} group=www-data mode=700
   with_items:
-    - .ssh
     - shared
     - bundle
     - config
@@ -41,16 +41,16 @@
     - tmp/sessions
     - tmp/sockets
 
-- name: add known ssh hosts
-  shell: ssh-keyscan -H github.com > /home/{{ user }}/.ssh/known_hosts
+- name: Add SSH key from Github
+  authorized_key: user={{ user }} key=https://github.com/{{ github_user }}.keys
 
-- name: ensure that authorized_keys exists
-  command: touch /home/{{ user }}/.ssh/authorized_keys
+- name: add known ssh hosts
+  shell: ssh-keyscan -H bitbucket.org github.com > /home/{{ user }}/.ssh/known_hosts
   args:
-    creates: /home/{{ user }}/.ssh/authorized_keys
+    creates: /home/{{ user }}/.ssh/known_hosts
 
 - name: fix ownership for known hosts
   file: path=/home/{{ user }}/.ssh/known_hosts mode=0600 owner={{ user }}
 
-- name: copy from root
-  shell: cat /root/.ssh/authorized_keys >>  /home/{{ user }}/.ssh/authorized_keys
+- name: fix ownership for authorized_keys
+  file: path=/home/{{ user }}/.ssh/authorized_keys mode=0600 owner={{ user }}
