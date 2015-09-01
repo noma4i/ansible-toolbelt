@@ -2,8 +2,6 @@
 - apt: pkg=nginx
 - service: name=nginx enabled=yes state=started
 - name: upload nginx config
-  synchronize: >
-    src=nginx dest=/etc
-    times=no checksum=yes
-    set_remote_user=yes rsync_path="sudo rsync"
+  synchronize: src=nginx dest=/etc dirs=yes delete=yes checksum=yes times=no rsync_path="sudo rsync"
+- template: src=rails_app.conf dest=/etc/nginx/vhosts.d/{{ app_name }}.conf
   notify: restart nginx

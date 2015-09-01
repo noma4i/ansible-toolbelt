@@ -6,23 +6,25 @@
     app_name: rails
     app_path: /home/deploy
     app_port: 8080
+    app_env: production
     rbenv:
       env: user
       version: v0.4.0
       ruby_version: 2.2.1
     environment_config:
-      SECRET_KEY_BASE: SECRET_KEY_BASE
-      DBUSER: DBUSER
-      DBPASS: DBPASS
-      iptables_allowed_tcp_ports: [22, 25, 80, 443, 3306, 6379]
-      iptables_allowed_udp_ports: [22, 25, 80, 443, 3306, 6379]
+      SECRET_KEY_BASE: so_secret
+      DBUSER: db_user
+      DBPASS: db_pass
+    iptables_allowed_tcp_ports: [22, 25, 80, 443, 3306, 6379]
+    iptables_allowed_udp_ports: [22, 25, 80, 443, 3306, 6379]
+    iptables_enabled: false
   remote_user: root
   roles:
+    - nginx
     - Stouts.iptables
     - common
     - monit
     - rails_unicorn
-    - nginx
     - franklinkim.environment
     - role: zzet.rbenv
       rbenv_users:

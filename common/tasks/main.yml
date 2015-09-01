@@ -27,19 +27,19 @@
 
 - service: name=fail2ban enabled=yes state=started
 
-- name: create folders for mina
-  file: path=/home/{{ user }}/{{ item }} state=directory owner={{ user }} group=www-data mode=700
-  with_items:
-    - shared
-    - bundle
-    - config
-    - releases
-    - log
-    - tmp
-    - tmp/cache
-    - tmp/pids
-    - tmp/sessions
-    - tmp/sockets
+# - name: create folders for mina
+#   file: path=/home/{{ user }}/{{ item }} state=directory owner={{ user }} group=www-data mode=700
+#   with_items:
+#     - shared
+#     - bundle
+#     - config
+#     - releases
+#     - log
+#     - tmp
+#     - shared/tmp/cache
+#     - shared/tmp/pids
+#     - shared/tmp/sessions
+#     - shared/tmp/sockets
 
 - name: Add SSH key from Github
   authorized_key: user={{ user }} key=https://github.com/{{ github_user }}.keys
